@@ -7,7 +7,6 @@
 import pandas as pd
 import streamlit as st
 import sqlite3
-import openpyxl
 from io import BytesIO
 
 lat = st.sidebar.selectbox('Menú principal',('Calculadora','Gestionar empleados','Histórico'))
