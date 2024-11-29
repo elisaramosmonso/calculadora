@@ -1,4 +1,3 @@
 pandas
 streamlit 
-sqlite3
 openpyxl
