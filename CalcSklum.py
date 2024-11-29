@@ -24,9 +24,9 @@ archivo_valoraciones= "archivo_valoraciones.csv"
 # In[27]:
 
 
-maestroPersonas = pd.read_excel(uploaded_file, sheet_name='Maestro personas', engine='openpyxl')
-PuestoPreg = pd.read_excel(uploaded_file, sheet_name='Puesto-Preguntas', engine='openpyxl')
-Resuls = pd.read_excel(uploaded_file, sheet_name='Resultados Objetivo', engine='openpyxl')
+maestroPersonas = pd.read_excel(uploaded_file, sheet_name='Maestro personas')
+PuestoPreg = pd.read_excel(uploaded_file, sheet_name='Puesto-Preguntas')
+Resuls = pd.read_excel(uploaded_file, sheet_name='Resultados Objetivo')
 df_personas = maestroPersonas
 df_puesto_pregs = PuestoPreg
 
