@@ -9,13 +9,7 @@
 # In[23]:
 
 
-import pandas as pd
-import streamlit as st
-import sqlite3
-import openpyxl
-import openpyxl
-from io import BytesIO
-import os
+
 
 # In[25]:
 
