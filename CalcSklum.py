@@ -27,86 +27,103 @@ archivo_valoraciones= "archivo_valoraciones.csv"
 maestroPersonas = pd.read_excel(uploaded_file, sheet_name='Maestro personas')
 PuestoPreg = pd.read_excel(uploaded_file, sheet_name='Puesto-Preguntas')
 Resuls = pd.read_excel(uploaded_file, sheet_name='Resultados Objetivo')
-df_personas = maestroPersonas
-df_puesto_pregs = PuestoPreg
+
 
 
 
 # In[33]:
 
-# Filtrar por supervisor
-if os.path.exists(archivo_valoraciones):
-    df_valoraciones_existentes = pd.read_csv(archivo_valoraciones)
-else:
-    df_valoraciones_existentes = pd.DataFrame()
+diccUsu_Contra = {"A": "fsa8K", "B": "dfg43P", "C": "htr26J", "admin": "lis23PK"}
 
-# Autenticación del supervisor
-supervisor_autenticado = st.text_input("Introduce tu nombre de supervisor:", "")
+# Inicializar estado de autenticación
+if 'authenticated' not in st.session_state:
+    st.session_state.authenticated = False
+    st.session_state.user = None  # Almacena el nombre del usuario autenticado
 
-# Autenticación del administrador
-admin_autenticado = st.text_input("Introduce tu nombre de administrador (si eres administrador):", "")
+# Función de autenticación
+def autenticar_usuario(usuario, contraseña):
+    return diccUsu_Contra.get(usuario) == contraseña
 
-# Filtrar por supervisor
-if supervisor_autenticado:
-    df_filtrado = df_personas[df_personas["SUPERVISOR"] == supervisor_autenticado]
-    
-    if not df_filtrado.empty:
-        st.write(f"Nombres a valorar para el supervisor **{supervisor_autenticado}**:")
-        
-        # Selección de persona
-        nombre_seleccionado = st.selectbox("Selecciona una persona a valorar:", df_filtrado["NOMBRE"].unique())
-        
-        # Obtener área y puesto de la persona seleccionada
-        persona = df_filtrado[df_filtrado["NOMBRE"] == nombre_seleccionado].iloc[0]
-        area_persona = persona["ÁREA"]
-        puesto_persona = persona["PUESTO"]
-        
-        st.write(f"Área: **{area_persona}** | Puesto: **{puesto_persona}**")
-        
-        # Filtrar preguntas según área y puesto
-        preguntas = df_puesto_pregs[
-            (df_puesto_pregs["ÁREA"] == area_persona) & 
-            (df_puesto_pregs["PUESTO"] == puesto_persona)
-        ]
-        
-        if not preguntas.empty:
-            st.write("Preguntas a valorar:")
-            
-            valoraciones = []
-            
-            # Mostrar cada pregunta con un slider para valorarla
-            for _, row in preguntas.iterrows():
-                pregunta = row["CONOCIMIENTO"]
-                valoracion = st.slider(f"{pregunta}", 1, 5, 3)
-                valoraciones.append({
-                    "SUPERVISOR": supervisor_autenticado,
-                    "NOMBRE": nombre_seleccionado,
-                    "ÁREA": area_persona,
-                    "PUESTO": puesto_persona,
-                    "PREGUNTA": pregunta,
-                    "VALORACIÓN": valoracion,
-                })
-                
-            # Botón para guardar valoraciones
-            if st.button("Guardar valoraciones"):
-                # Convertir las valoraciones a un DataFrame
-                df_nuevas_valoraciones = pd.DataFrame(valoraciones)
-                
-                # Concatenar las nuevas valoraciones con las anteriores
-                df_valoraciones_actualizadas = pd.concat([df_valoraciones_existentes, df_nuevas_valoraciones], ignore_index=True)
-                
-                # Guardar el DataFrame actualizado en el archivo CSV
-                df_valoraciones_actualizadas.to_csv(archivo_valoraciones, index=False)
-                st.success("Valoraciones guardadas correctamente.")
-                
-        else:
-            st.warning(f"No hay preguntas para el área **{area_persona}** y puesto **{puesto_persona}**.")
+# Si está autenticado, continuar con el flujo de la aplicación
+if st.session_state.authenticated:
+    archivo_valoraciones = "valoraciones.csv"
+    df_personas = maestroPersonas
+    df_puesto_pregs =PuestoPreg
+
+    # Cargar valoraciones existentes
+    if os.path.exists(archivo_valoraciones):
+        df_valoraciones_existentes = pd.read_csv(archivo_valoraciones)
     else:
-        st.warning("No se encontraron nombres para este supervisor.")
+        df_valoraciones_existentes = pd.DataFrame()
 
-# Solo el administrador puede ver las valoraciones
-if admin_autenticado == "admin":  # Aquí pones el nombre del administrador que quieres autenticar
-    st.write("### Valoraciones completas (solo para administrador):")
-    st.table(df_valoraciones_actualizadas)  # Aquí se muestran las valoraciones completas
+    # Obtener el usuario autenticado
+    usuario_autenticado = st.session_state.user
+
+    # Filtrar por supervisor o mostrar valoraciones si es administrador
+    if usuario_autenticado != "admin":
+        df_filtrado = df_personas[df_personas["SUPERVISOR"] == usuario_autenticado]
+
+        if not df_filtrado.empty:
+            st.write(f"Nombres a valorar para el supervisor **{usuario_autenticado}**:")
+
+            nombre_seleccionado = st.selectbox("Selecciona una persona a valorar:", df_filtrado["NOMBRE"].unique())
+
+            persona = df_filtrado[df_filtrado["NOMBRE"] == nombre_seleccionado].iloc[0]
+            area_persona = persona["ÁREA"]
+            puesto_persona = persona["PUESTO"]
+
+            st.write(f"Área: **{area_persona}** | Puesto: **{puesto_persona}**")
+
+            preguntas = df_puesto_pregs[(df_puesto_pregs["ÁREA"] == area_persona) & 
+                                        (df_puesto_pregs["PUESTO"] == puesto_persona)]
+
+            if not preguntas.empty:
+                st.write("Preguntas a valorar:")
+
+                valoraciones = []
+                for _, row in preguntas.iterrows():
+                    pregunta = row["CONOCIMIENTO"]
+                    valoracion = st.slider(f"{pregunta}", 1, 5, 3)
+                    valoraciones.append({
+                        "SUPERVISOR": usuario_autenticado,
+                        "NOMBRE": nombre_seleccionado,
+                        "ÁREA": area_persona,
+                        "PUESTO": puesto_persona,
+                        "PREGUNTA": pregunta,
+                        "VALORACIÓN": valoracion,
+                    })
+
+                if st.button("Guardar valoraciones"):
+                    df_nuevas_valoraciones = pd.DataFrame(valoraciones)
+                    df_valoraciones_actualizadas = pd.concat([df_valoraciones_existentes, df_nuevas_valoraciones], ignore_index=True)
+                    df_valoraciones_actualizadas.to_csv(archivo_valoraciones, index=False)
+                    st.success("Valoraciones guardadas correctamente.")
+            else:
+                st.warning(f"No hay preguntas para el área **{area_persona}** y puesto **{puesto_persona}**.")
+        else:
+            st.warning("No se encontraron nombres para este supervisor.")
+
+    # Mostrar todas las valoraciones si es administrador
+    elif usuario_autenticado == "admin":
+        st.write("### Valoraciones completas (solo para administrador):")
+        st.table(df_valoraciones_existentes)
+
+    # Cerrar sesión
+    if st.button("Cerrar sesión"):
+        st.session_state.authenticated = False
+        st.session_state.user = None
+        st.experimental_rerun()
+
+# Formulario de login si no está autenticado
 else:
-    st.warning("No tienes permisos para ver las valoraciones.")
+    st.title("Iniciar Sesión")
+    username_input = st.text_input("Nombre de usuario")
+    password_input = st.text_input("Contraseña", type="password")
+
+    if st.button("Acceder"):
+        if autenticar_usuario(username_input, password_input):
+            st.session_state.authenticated = True
+            st.session_state.user = username_input
+            st.experimental_rerun()  # Recargar para mostrar el contenido protegido
+        else:
+            st.error("Nombre de usuario o contraseña incorrectos. Intenta de nuevo.")
