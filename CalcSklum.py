@@ -97,9 +97,7 @@ if st.session_state.authenticated:
                     })
 
                 if st.button("Guardar valoraciones"):
-                    bsresp = float(str(t33[(t33['PUESTO']==puesto) & (t33['Nivel']==nivel)]['Rango Retributivo'].iloc[0]).replace(',','.'))
-                    bsger = float(str(t33[(t33['PUESTO']==puesto) & (t33['Nivel']==nivel_g)]['Rango Retributivo'].iloc[0]).replace(',','.'))
-                    propret = 0.5*(bsresp+bsger)
+                    
                     df_nuevas_valoraciones = pd.DataFrame(valoraciones)
                     df_valoraciones_actualizadas = pd.concat([df_valoraciones_existentes, df_nuevas_valoraciones], ignore_index=True)
                     df_valoraciones_actualizadas.to_csv(archivo_valoraciones, index=False)
