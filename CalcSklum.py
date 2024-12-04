@@ -91,8 +91,8 @@ if st.session_state.authenticated:
                         "NOMBRE": nombre_seleccionado,
                         "ÁREA": area_persona,
                         "PUESTO": puesto_persona,
-                        "PREGUNTA": pregunta,
                         "id_Conocimiento": idcon,
+                        "PREGUNTA": pregunta,
                         "VALORACIÓN": valoracion,
                     })
 
