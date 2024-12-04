@@ -117,7 +117,7 @@ if st.session_state.authenticated:
     if st.button("Cerrar sesión"):
         st.session_state.authenticated = False
         st.session_state.user = None
-        st.experimental_rerun()
+        st.rerun()
 
 else:
     st.title("Iniciar Sesión")
@@ -128,6 +128,6 @@ else:
         if autenticar_usuario(username_input, password_input):
             st.session_state.authenticated = True
             st.session_state.user = username_input
-            st.experimental_rerun()  # Recargar para mostrar el contenido protegido
+            st.rerun()  # Recargar para mostrar el contenido protegido
         else:
             st.error("Nombre de usuario o contraseña incorrectos. Intenta de nuevo.")
