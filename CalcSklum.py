@@ -40,12 +40,12 @@ if 'authenticated' not in st.session_state:
     st.session_state.authenticated = False
     st.session_state.user = None  # Almacena el nombre del usuario autenticado
 
-# Función de autenticación
 def autenticar_usuario(usuario, contraseña):
     return diccUsu_Contra.get(usuario) == contraseña
 
 # Si está autenticado, continuar con el flujo de la aplicación
 if st.session_state.authenticated:
+    st.title('CALCULADORA DE RETRIBUCIONES')
     archivo_valoraciones = "valoraciones.csv"
     df_personas = maestroPersonas
     df_puesto_pregs =PuestoPreg
@@ -71,6 +71,7 @@ if st.session_state.authenticated:
             persona = df_filtrado[df_filtrado["NOMBRE"] == nombre_seleccionado].iloc[0]
             area_persona = persona["ÁREA"]
             puesto_persona = persona["PUESTO"]
+            
 
             st.write(f"Área: **{area_persona}** | Puesto: **{puesto_persona}**")
 
@@ -82,6 +83,7 @@ if st.session_state.authenticated:
 
                 valoraciones = []
                 for _, row in preguntas.iterrows():
+                    idcon= row["ID CONOCIMIENTO"]
                     pregunta = row["CONOCIMIENTO"]
                     valoracion = st.slider(f"{pregunta}", 1, 5, 3)
                     valoraciones.append({
@@ -90,10 +92,14 @@ if st.session_state.authenticated:
                         "ÁREA": area_persona,
                         "PUESTO": puesto_persona,
                         "PREGUNTA": pregunta,
+                        "id_Conocimiento": idcon,
                         "VALORACIÓN": valoracion,
                     })
 
                 if st.button("Guardar valoraciones"):
+                    bsresp = float(str(t33[(t33['PUESTO']==puesto) & (t33['Nivel']==nivel)]['Rango Retributivo'].iloc[0]).replace(',','.'))
+                    bsger = float(str(t33[(t33['PUESTO']==puesto) & (t33['Nivel']==nivel_g)]['Rango Retributivo'].iloc[0]).replace(',','.'))
+                    propret = 0.5*(bsresp+bsger)
                     df_nuevas_valoraciones = pd.DataFrame(valoraciones)
                     df_valoraciones_actualizadas = pd.concat([df_valoraciones_existentes, df_nuevas_valoraciones], ignore_index=True)
                     df_valoraciones_actualizadas.to_csv(archivo_valoraciones, index=False)
@@ -108,13 +114,11 @@ if st.session_state.authenticated:
         st.write("### Valoraciones completas (solo para administrador):")
         st.table(df_valoraciones_existentes)
 
-    # Cerrar sesión
     if st.button("Cerrar sesión"):
         st.session_state.authenticated = False
         st.session_state.user = None
-        st.rerun()
+        st.experimental_rerun()
 
-# Formulario de login si no está autenticado
 else:
     st.title("Iniciar Sesión")
     username_input = st.text_input("Nombre de usuario")
@@ -124,6 +128,6 @@ else:
         if autenticar_usuario(username_input, password_input):
             st.session_state.authenticated = True
             st.session_state.user = username_input
-            st.rerun()  # Recargar para mostrar el contenido protegido
+            st.experimental_rerun()  # Recargar para mostrar el contenido protegido
         else:
             st.error("Nombre de usuario o contraseña incorrectos. Intenta de nuevo.")
