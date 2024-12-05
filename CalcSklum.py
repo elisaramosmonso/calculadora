@@ -166,13 +166,23 @@ if st.session_state.authenticated:
     # Mostrar todas las valoraciones si es administrador
     elif usuario_autenticado == "admin":
         st.write("### Valoraciones completas (solo para administrador):")
-        st.table(df_valoraciones_actualizadas)
-        st.table(df_resultados)
-
-    if st.button("Cerrar sesión"):
-        st.session_state.authenticated = False
-        st.session_state.user = None
-        st.rerun()
+        if 'df_valoraciones_actualizadas' in locals() and not df_valoraciones_actualizadas.empty:
+            st.subheader("Valoraciones Actualizadas")
+            st.table(df_valoraciones_actualizadas)
+        else:
+            st.warning("No hay valoraciones actualizadas para mostrar.")
+        
+        # Mostrar resultados
+        if 'df_resultados' in locals() and not df_resultados.empty:
+            st.subheader("Resultados de Retribución")
+            st.table(df_resultados)
+        else:
+            st.warning("No hay resultados de retribución para mostrar.")
+    
+        if st.button("Cerrar sesión"):
+            st.session_state.authenticated = False
+            st.session_state.user = None
+            st.rerun()
 
 else:
     st.title("Iniciar Sesión")
