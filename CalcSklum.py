@@ -157,7 +157,7 @@ if st.session_state.authenticated:
 
                     # Crear DataFrame con los resultados de las retribuciones
                     df_resultados = pd.DataFrame(df_resultados)                    
-
+                    st.table(df_resultados)
             else:
                 st.warning(f"No hay preguntas para el área **{area_persona}** y puesto **{puesto_persona}**.")
         else:
