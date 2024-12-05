@@ -12,6 +12,7 @@ import streamlit as st
 import sqlite3
 from io import BytesIO
 import os
+from datetime import datetime
 
 
 
@@ -48,7 +49,7 @@ if st.session_state.authenticated:
     st.title('CALCULADORA DE RETRIBUCIONES')
     archivo_valoraciones = "valoraciones.csv"
     df_personas = maestroPersonas
-    df_puesto_pregs =PuestoPreg
+    df_puesto_pregs = PuestoPreg
 
     # Cargar valoraciones existentes
     if os.path.exists(archivo_valoraciones):
@@ -71,7 +72,6 @@ if st.session_state.authenticated:
             persona = df_filtrado[df_filtrado["NOMBRE"] == nombre_seleccionado].iloc[0]
             area_persona = persona["ÁREA"]
             puesto_persona = persona["PUESTO"]
-            
 
             st.write(f"Área: **{area_persona}** | Puesto: **{puesto_persona}**")
 
@@ -83,7 +83,7 @@ if st.session_state.authenticated:
 
                 valoraciones = []
                 for _, row in preguntas.iterrows():
-                    idcon= row["ID CONOCIMIENTO"]
+                    idcon = row["ID CONOCIMIENTO"]
                     pregunta = row["CONOCIMIENTO"]
                     valoracion = st.slider(f"{pregunta}", 1, 5, 3)
                     valoraciones.append({
@@ -94,14 +94,41 @@ if st.session_state.authenticated:
                         "id_Conocimiento": idcon,
                         "PREGUNTA": pregunta,
                         "VALORACIÓN": valoracion,
+                        "FECHA": datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                     })
 
+                # Generación de 'propret' para cada persona evaluada
                 if st.button("Guardar valoraciones"):
-                    
                     df_nuevas_valoraciones = pd.DataFrame(valoraciones)
                     df_valoraciones_actualizadas = pd.concat([df_valoraciones_existentes, df_nuevas_valoraciones], ignore_index=True)
                     df_valoraciones_actualizadas.to_csv(archivo_valoraciones, index=False)
                     st.success("Valoraciones guardadas correctamente.")
+
+                    # Calcular 'propret' para cada persona
+                    # Vamos a asumir que `t33` y `df_valoraciones` son DataFrames cargados previamente
+                    # El cálculo del 'propret' está basado en los niveles y los rangos de retribución
+                    df_resultados = []
+                    for _, row in df_valoraciones_actualizadas.iterrows():
+                        puesto = row['PUESTO']
+                        nivel = row['COINCIDENCIA']  # Este es el nivel asociado a cada valoración
+                        nivel_g = nivel
+
+                        # Aquí asumo que tienes un DataFrame t33 que contiene los rangos de retribución
+                        bsresp = float(str(t33[(t33['PUESTO'] == puesto) & (t33['Nivel'] == nivel)]['Rango Retributivo'].iloc[0]).replace(',', '.'))
+                        bsger = float(str(t33[(t33['PUESTO'] == puesto) & (t33['Nivel'] == nivel_g)]['Rango Retributivo'].iloc[0]).replace(',', '.'))
+                        propret = 0.5 * (bsresp + bsger)
+
+                        df_resultados.append({
+                            'NOMBRE': row['NOMBRE'],
+                            'PUESTO': row['PUESTO'],
+                            'PROPRET': propret
+                        })
+
+                    # Crear DataFrame con los resultados
+                    df_resultados = pd.DataFrame(df_resultados)
+                    st.write("### Resultados de la retribución calculada:")
+                    st.table(df_resultados)
+
             else:
                 st.warning(f"No hay preguntas para el área **{area_persona}** y puesto **{puesto_persona}**.")
         else:
@@ -128,4 +155,6 @@ else:
             st.session_state.user = username_input
             st.rerun()  # Recargar para mostrar el contenido protegido
         else:
+            st.error("Nombre de usuario o contraseña incorrectos. Intenta de nuevo.")
+
             st.error("Nombre de usuario o contraseña incorrectos. Intenta de nuevo.")
