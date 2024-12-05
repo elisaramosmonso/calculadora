@@ -166,7 +166,7 @@ if st.session_state.authenticated:
     # Mostrar todas las valoraciones si es administrador
     elif usuario_autenticado == "admin":
         st.write("### Valoraciones completas (solo para administrador):")
-        st.table(df_valoraciones_existentes)
+        st.table(df_valoraciones_actualizadas)
         st.table(df_resultados)
 
     if st.button("Cerrar sesión"):
