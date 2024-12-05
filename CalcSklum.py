@@ -149,7 +149,7 @@ if st.session_state.authenticated:
 
                     # Añadir el resultado al DataFrame de resultados
                     df_resultados.append({
-                        'Supervisor': df_valoraciones_actualizadas['SUPERVISOR'].iloc[0]
+                        'Supervisor': df_valoraciones_actualizadas['SUPERVISOR'].iloc[0],
                         'NOMBRE': df_filtrado['NOMBRE'].values[0],
                         'PUESTO': puesto,
                         'PROPRET': propret
