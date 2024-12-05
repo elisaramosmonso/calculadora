@@ -149,15 +149,14 @@ if st.session_state.authenticated:
 
                     # Añadir el resultado al DataFrame de resultados
                     df_resultados.append({
+                        'Supervisor': df_valoraciones_actualizadas['SUPERVISOR'].iloc[0]]
                         'NOMBRE': df_filtrado['NOMBRE'].values[0],
                         'PUESTO': puesto,
                         'PROPRET': propret
                     })
 
                     # Crear DataFrame con los resultados de las retribuciones
-                    df_resultados = pd.DataFrame(df_resultados)
-                    st.write("### Resultados de la retribución calculada:")
-                    st.table(df_resultados)
+                    df_resultados = pd.DataFrame(df_resultados)                    
 
             else:
                 st.warning(f"No hay preguntas para el área **{area_persona}** y puesto **{puesto_persona}**.")
@@ -168,6 +167,7 @@ if st.session_state.authenticated:
     elif usuario_autenticado == "admin":
         st.write("### Valoraciones completas (solo para administrador):")
         st.table(df_valoraciones_existentes)
+        st.table(df_resultados)
 
     if st.button("Cerrar sesión"):
         st.session_state.authenticated = False
