@@ -179,10 +179,10 @@ if st.session_state.authenticated:
         else:
             st.warning("No hay resultados de retribución para mostrar.")
     
-        if st.button("Cerrar sesión"):
-            st.session_state.authenticated = False
-            st.session_state.user = None
-            st.rerun()
+    if st.button("Cerrar sesión"):
+        st.session_state.authenticated = False
+        st.session_state.user = None
+        st.rerun()
 
 else:
     st.title("Iniciar Sesión")
