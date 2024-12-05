@@ -113,7 +113,6 @@ if st.session_state.authenticated:
                     # Calcular 'propret' para cada persona
                     df_resultados = []
                     
-                    # Cargar DataFrame 't2' que se necesita para encontrar las columnas relacionadas con las valoraciones
                     tprueb = t2[t2['PUESTO'] == df_valoraciones_actualizadas['PUESTO'].iloc[0]]
                     tprueb2 = tprueb.iloc[:, 5:]
                     tprueb2 = pd.DataFrame(tprueb2)
@@ -124,14 +123,13 @@ if st.session_state.authenticated:
                              'N1: 10 - 13 AÑOS', 'N2: 13 - 16 AÑOS', 'N3: 16 - 20 AÑOS',
                              'N1: 20 - 24 AÑOS', 'N2: 24 - 30 AÑOS', 'N3: 30 - 38 AÑOS']
 
-                    # Función para encontrar la columna que coincida con el valor de la valoración
                     def find_matching_column(valoracion, df2):
                         for col in tprueb2.columns:
                             if valoracion in tprueb2[col].values:
                                 return col
                         return None
                     
-                    # Buscar la coincidencia de nivel
+                    # nivel
                     df_valoraciones_actualizadas['COINCIDENCIA'] = df_valoraciones_actualizadas['VALORACIÓN'].apply(lambda x: find_matching_column(x, tprueb2))
                     orden_dict = {value: idx for idx, value in enumerate(orden)}
                     df_valoraciones_actualizadas['COINCIDENCIA_ORDEN'] = df_valoraciones_actualizadas['COINCIDENCIA'].map(orden_dict)
@@ -142,12 +140,11 @@ if st.session_state.authenticated:
                     nivel_g = nivel
                     puesto = "T.IMPRESIÓN_3D"  # Suponemos que es este el puesto que queremos calcular
 
-                    # Cargar DataFrame t33 para los rangos retributivos
+                    #  t33 para los rangos retributivos
                     bsresp = float(str(t33[(t33['PUESTO'] == puesto) & (t33['Nivel'] == nivel)]['Rango Retributivo'].iloc[0]).replace(',', '.'))
                     bsger = float(str(t33[(t33['PUESTO'] == puesto) & (t33['Nivel'] == nivel_g)]['Rango Retributivo'].iloc[0]).replace(',', '.'))
                     propret = 0.5 * (bsresp + bsger)
 
-                    # Añadir el resultado al DataFrame de resultados
                     df_resultados.append({
                         'Supervisor': df_valoraciones_actualizadas['SUPERVISOR'].iloc[0],
                         'NOMBRE': df_filtrado['NOMBRE'].values[0],
@@ -163,7 +160,6 @@ if st.session_state.authenticated:
         else:
             st.warning("No se encontraron nombres para este supervisor.")
 
-    # Mostrar todas las valoraciones si es administrador
     elif usuario_autenticado == "admin":
         st.write("### Valoraciones completas (solo para administrador):")
         if 'df_valoraciones_actualizadas' in locals() and not df_valoraciones_actualizadas.empty:
