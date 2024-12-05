@@ -25,10 +25,14 @@ archivo_valoraciones= "archivo_valoraciones.csv"
 # In[27]:
 
 
-maestroPersonas = pd.read_excel(uploaded_file, sheet_name='Maestro personas')
+maestroPersonas= pd.read_excel(uploaded_file, sheet_name='Maestro personas')
 PuestoPreg = pd.read_excel(uploaded_file, sheet_name='Puesto-Preguntas')
 Resuls = pd.read_excel(uploaded_file, sheet_name='Resultados Objetivo')
-
+archivo_valoraciones= "archivo_valoraciones.csv"
+t33 = pd.read_excel(uploaded_file, sheet_name='Tabla3.3')
+t4 = pd.read_excel(uploaded_file, sheet_name='TABLA 4')
+t22 = pd.read_excel(uploaded_file, sheet_name='tabla 2.2')
+t2 = pd.read_excel(uploaded_file, sheet_name='TABLA 2')
 
 
 
