@@ -294,18 +294,14 @@ if st.session_state.authenticated:
         df_valoraciones_actualizadas=ver_datos()
         df_resultados=ver_datos2()
         st.write("### Valoraciones completas (solo para administrador):")
-        if 'df_valoraciones_actualizadas' in locals() and not df_valoraciones_actualizadas.empty:
-            st.subheader("Valoraciones Actualizadas")
-            st.table(df_valoraciones_actualizadas)
-        else:
-            st.warning("No hay valoraciones actualizadas para mostrar.")
+        st.subheader("Valoraciones Actualizadas")
+        st.table(df_valoraciones_actualizadas)
+       
         
         # Mostrar resultados
-        if 'df_resultados' in locals() and not df_resultados.empty:
-            st.subheader("Resultados de Retribución")
-            st.table(df_resultados)
-        else:
-            st.warning("No hay resultados de retribución para mostrar.")
+        st.subheader("Resultados de Retribución")
+        st.table(df_resultados)
+        
     
     if st.button("Cerrar sesión"):
         st.session_state.authenticated = False
