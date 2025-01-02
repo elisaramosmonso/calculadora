@@ -246,8 +246,8 @@ if st.session_state.authenticated:
                     propret = 0.5 * (bsresp + bsger)
 
                     df_resultados.append({
-                        'Supervisor': df_valoraciones_actualizadas['SUPERVISOR'].iloc[0],
-                        'NOMBRE': df_filtrado['NOMBRE'].values[0],
+                        'Supervisor': df_valoraciones_actualizadas['SUPERVISOR'],
+                        'NOMBRE': df_filtrado['NOMBRE'],
                         'PUESTO': puesto,
                         'PROPRET': propret,
                         "FECHA": datetime.now().strftime('%Y-%m-%d %H:%M:%S')
