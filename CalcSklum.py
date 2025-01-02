@@ -263,7 +263,7 @@ if st.session_state.authenticated:
                     propret = 0.5 * (bsresp + bsger)
 
                     df_resultados.append({
-                        'Supervisor': df_valoraciones_actualizadas['SUPERVISOR'],
+                        'Supervisor': usuario_autenticado,
                         'NOMBRE': df_filtrado['NOMBRE'],
                         'PUESTO': puesto,
                         'PROPRET': propret,
