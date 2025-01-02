@@ -61,7 +61,7 @@ def crear_tablas():
         
         
     cursor.execute('''
-        CCREATE TABLE IF NOT EXISTS retribuciones (
+        CREATE TABLE IF NOT EXISTS retribuciones (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     Supervisor TEXT NOT NULL,
     NOMBRE TEXT NOT NULL,
