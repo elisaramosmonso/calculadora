@@ -298,7 +298,7 @@ if st.session_state.authenticated:
         st.subheader("Valoraciones Actualizadas")
         st.table(df_valoraciones_actualizadas)
        
-        df_resultados = df_resultados.sort_values('FECHA').drop_duplicates(subset=['NOMBRE'], keep='last')
+        #df_resultados = df_resultados.sort_values('FECHA').drop_duplicates(subset=['NOMBRE'], keep='last')
         # Mostrar resultados
         st.subheader("Resultados de Retribución")
         st.table(df_resultados)
