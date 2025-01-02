@@ -250,30 +250,7 @@ if st.session_state.authenticated:
             st.warning("No se encontraron nombres para este supervisor.")
 
     elif usuario_autenticado == "admin":
-        def obtener_trabajadores():
-            conn = conectar_db()
-            query = "SELECT * FROM trabajadores"
-            df = pd.read_sql(query, conn)
-            conn.close()
-            return df
-        def cambiar_puesto(nombre, nuevo_puesto):
-            conn = conectar_db()
-            cursor = conn.cursor()
-            cursor.execute('UPDATE trabajadores SET puesto = ? WHERE nombre = ?', (nuevo_puesto, nombre))
-            conn.commit()
-            conn.close()
-        # Sección para cambiar el puesto de un trabajador por nombre
-        st.subheader('Cambiar Puesto de un Trabajador')
-        nombre_a_cambiar = st.text_input('Nombre del Trabajador a Modificar')
-        nuevo_puesto = st.text_input('Nuevo Puesto')
         
-        if st.button('Cambiar Puesto'):
-            if nombre_a_cambiar and nuevo_puesto:
-                cambiar_puesto(nombre_a_cambiar, nuevo_puesto)
-                st.success(f'Puesto del trabajador con nombre "{nombre_a_cambiar}" actualizado a "{nuevo_puesto}"')
-                st.rerun()
-        else:
-            st.error('Por favor, ingrese un nombre válido y un nuevo puesto')
         st.write("### Valoraciones completas (solo para administrador):")
         if 'df_valoraciones_actualizadas' in locals() and not df_valoraciones_actualizadas.empty:
             st.subheader("Valoraciones Actualizadas")
