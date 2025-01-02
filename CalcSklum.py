@@ -261,17 +261,18 @@ if st.session_state.authenticated:
                     bsresp = float(str(t33[(t33['PUESTO'] == puesto) & (t33['Nivel'] == nivel)]['Rango Retributivo'].iloc[0]).replace(',', '.'))
                     bsger = float(str(t33[(t33['PUESTO'] == puesto) & (t33['Nivel'] == nivel_g)]['Rango Retributivo'].iloc[0]).replace(',', '.'))
                     propret = 0.5 * (bsresp + bsger)
-                    st.table(df_filtrado)
-                    df_resultados.append({
-                        'Supervisor': usuario_autenticado,
-                        'NOMBRE': df_filtrado['NOMBRE'],
-                        'PUESTO': puesto,
-                        'PROPRET': propret,
-                        "FECHA": datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-                    })
-
-                    # Crear DataFrame con los resultados de las retribuciones
-                    df_resultados = pd.DataFrame(df_resultados) 
+                    df_filtrado['propret']= propret
+                    for _, row in df_filtrado():
+                        df_resultados.append({
+                            'Supervisor': usuario_autenticado,
+                            'NOMBRE': row['NOMBRE'],
+                            'PUESTO': row['PUESTO'],
+                            'PROPRET': row['propret'],
+                            "FECHA": datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                        })
+    
+                        # Crear DataFrame con los resultados de las retribuciones
+                        df_resultados = pd.DataFrame(df_resultados) 
                     insertar_valoraciones_en_sql(df_valoraciones_actualizadas)
                     insertar_resultados_en_sql(df_resultados)
                     
