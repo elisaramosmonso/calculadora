@@ -274,9 +274,9 @@ if st.session_state.authenticated:
                         })
                 
                     # Crear DataFrame con los resultados de las retribuciones
-                    df_resultados = pd.DataFrame(df_resultados)
-                    insertar_valoraciones_en_sql(df_valoraciones_actualizadas)
-                    insertar_resultados_en_sql(df_resultados)
+                df_resultados = pd.DataFrame(df_resultados)
+                insertar_valoraciones_en_sql(df_valoraciones_actualizadas)
+                insertar_resultados_en_sql(df_resultados)
                     
             else:
                 st.warning(f"No hay preguntas para el área **{area_persona}** y puesto **{puesto_persona}**.")
