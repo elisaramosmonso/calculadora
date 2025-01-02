@@ -169,7 +169,7 @@ def autenticar_usuario(usuario, contraseña):
 # Si está autenticado, continuar con el flujo de la aplicación
 if st.session_state.authenticated:
     st.title('CALCULADORA DE RETRIBUCIONES')
-    archivo_valoraciones = "valoraciones.csv"
+    
     df_personas = maestroPersonas
     df_puesto_pregs = PuestoPreg
 
