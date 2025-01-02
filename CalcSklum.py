@@ -293,11 +293,13 @@ if st.session_state.authenticated:
     elif usuario_autenticado == "admin":
         df_valoraciones_actualizadas=ver_datos()
         df_resultados=ver_datos2()
+        df_valoraciones_actualizadas = df_valoraciones_actualizadas.sort_values('FECHA').drop_duplicates(subset=['NOMBRE', 'id_Conocimiento'], keep='last')
+
         st.write("### Valoraciones completas (solo para administrador):")
         st.subheader("Valoraciones Actualizadas")
         st.table(df_valoraciones_actualizadas)
        
-        
+        df_resultados = df_resultados.sort_values('FECHA').drop_duplicates(subset=['NOMBRE'], keep='last')
         # Mostrar resultados
         st.subheader("Resultados de Retribución")
         st.table(df_resultados)
