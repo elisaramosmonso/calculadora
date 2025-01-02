@@ -208,6 +208,9 @@ if st.session_state.authenticated:
                     idcon = row["ID CONOCIMIENTO"]
                     pregunta = row["CONOCIMIENTO"]
                     valoracion = st.slider(f"{pregunta}", 1, 5, 3)
+                    
+
+                if st.button("Guardar valoraciones"):
                     valoraciones.append({
                         "SUPERVISOR": usuario_autenticado,
                         "NOMBRE": nombre_seleccionado,
@@ -218,8 +221,6 @@ if st.session_state.authenticated:
                         "VALORACIÓN": valoracion,
                         "FECHA": datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                     })
-
-                if st.button("Guardar valoraciones"):
                     # Guardamos las valoraciones nuevas
                     df_nuevas_valoraciones = pd.DataFrame(valoraciones)
                     df_valoraciones_actualizadas = pd.concat([df_valoraciones_existentes, df_nuevas_valoraciones], ignore_index=True)
