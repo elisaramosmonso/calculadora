@@ -37,6 +37,19 @@ t2 = pd.read_excel(uploaded_file, sheet_name='TABLA 2')
 
 
 # In[33]:
+def ver_datos():
+    conn= sqlite3.connect('retribuciones.db')
+    query = "SELECT * FROM valoraciones"
+    dfvaloraciones = pd.read_sql(query, conn)
+    return dfvaloraciones
+    conn.close()
+
+def ver_datos2():
+    conn= sqlite3.connect('retribuciones.db')
+    query = "SELECT * FROM retribuciones"
+    dfretribuciones = pd.read_sql(query, conn)
+    return dfretribuciones
+    conn.close()
 def conectar_db():
     conn = sqlite3.connect('retribuciones.db')
     return conn
@@ -255,7 +268,9 @@ if st.session_state.authenticated:
         st.write("### Valoraciones completas (solo para administrador):")
         if 'df_valoraciones_actualizadas' in locals() and not df_valoraciones_actualizadas.empty:
             st.subheader("Valoraciones Actualizadas")
+            df_valoraciones_actualizadas=ver_datos()
             st.table(df_valoraciones_actualizadas)
+            df_resultados=ver_datos2()
             st.table(df_resultados)
         else:
             st.warning("No hay valoraciones actualizadas para mostrar.")
