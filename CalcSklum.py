@@ -261,7 +261,7 @@ if st.session_state.authenticated:
                     bsresp = float(str(t33[(t33['PUESTO'] == puesto) & (t33['Nivel'] == nivel)]['Rango Retributivo'].iloc[0]).replace(',', '.'))
                     bsger = float(str(t33[(t33['PUESTO'] == puesto) & (t33['Nivel'] == nivel_g)]['Rango Retributivo'].iloc[0]).replace(',', '.'))
                     propret = 0.5 * (bsresp + bsger)
-
+                    st.table(df_filtrado)
                     df_resultados.append({
                         'Supervisor': usuario_autenticado,
                         'NOMBRE': df_filtrado['NOMBRE'],
