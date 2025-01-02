@@ -219,13 +219,12 @@ if st.session_state.authenticated:
                         "VALORACIÓN": valoracion,
                         "FECHA": datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                     })
-
+                
                 if st.button("Guardar valoraciones"):
                     
                     # Guardamos las valoraciones nuevas
                     df_nuevas_valoraciones = pd.DataFrame(valoraciones)
                     df_valoraciones_actualizadas = pd.concat([df_valoraciones_existentes, df_nuevas_valoraciones], ignore_index=True)
-                    df_valoraciones_actualizadas.to_csv(archivo_valoraciones, index=False)
                     st.success("Valoraciones guardadas correctamente.")
                     df_valoraciones_actualizadas = df_valoraciones_actualizadas.sort_values('FECHA').drop_duplicates(subset=['NOMBRE', 'id_Conocimiento'], keep='last')
 
@@ -293,7 +292,7 @@ if st.session_state.authenticated:
     elif usuario_autenticado == "admin":
         df_valoraciones_actualizadas=ver_datos()
         df_resultados=ver_datos2()
-        df_valoraciones_actualizadas = df_valoraciones_actualizadas.sort_values('FECHA').drop_duplicates(subset=['NOMBRE', 'id_Conocimiento'], keep='last')
+        #df_valoraciones_actualizadas = df_valoraciones_actualizadas.sort_values('FECHA').drop_duplicates(subset=['NOMBRE', 'id_Conocimiento'], keep='last')
 
         st.write("### Valoraciones completas (solo para administrador):")
         st.subheader("Valoraciones Actualizadas")
