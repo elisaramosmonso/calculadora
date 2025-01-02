@@ -77,7 +77,7 @@ crear_tablas()
 # Definir diccionario de usuarios y contraseñas
 diccUsu_Contra = {"A": "fsa8K", "B": "dfg43P", "C": "htr26J", "admin": "lis23PK"}
 def insertar_valoraciones_en_sql(df_valoraciones_actualizadas):
-    conn = sqlite3.connect('valoraciones.db')
+    conn = sqlite3.connect('retribuciones.db')
     cursor = conn.cursor()
 
     for _, row in df_valoraciones_actualizadas.iterrows():
@@ -105,7 +105,7 @@ def insertar_valoraciones_en_sql(df_valoraciones_actualizadas):
     conn.commit()
     conn.close()
 def insertar_resultados_en_sql(df_resultados):
-    conn = sqlite3.connect('resultados.db')
+    conn = sqlite3.connect('retribuciones.db')
     cursor = conn.cursor()
 
     for _, row in df_resultados.iterrows():
