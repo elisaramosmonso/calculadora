@@ -253,26 +253,28 @@ if st.session_state.authenticated:
 
                     # Filtrar por el menor nivel de coincidencia para cada persona
                     df_filtrado = df_valoraciones_actualizadas.loc[df_valoraciones_actualizadas.groupby(['SUPERVISOR', 'NOMBRE', 'ÁREA', 'PUESTO'])['COINCIDENCIA_ORDEN'].idxmin()]
-                    nivel = df_filtrado['COINCIDENCIA'].values[0]
-                    nivel_g = nivel
-                    puesto = "T.IMPRESIÓN_3D"  # Suponemos que es este el puesto que queremos calcular
 
-                    #  t33 para los rangos retributivos
-                    bsresp = float(str(t33[(t33['PUESTO'] == puesto) & (t33['Nivel'] == nivel)]['Rango Retributivo'].iloc[0]).replace(',', '.'))
-                    bsger = float(str(t33[(t33['PUESTO'] == puesto) & (t33['Nivel'] == nivel_g)]['Rango Retributivo'].iloc[0]).replace(',', '.'))
-                    propret = 0.5 * (bsresp + bsger)
-                    df_filtrado['propret']= propret
-                    for _, row in df_filtrado():
+                for _, row in df_filtrado.iterrows():
+                        nivel = row['COINCIDENCIA']
+                        nivel_g = nivel
+                        puesto = row['PUESTO']  # Asumimos que el puesto está en la fila
+                
+                        # t33 para los rangos retributivos
+                        bsresp = float(str(t33[(t33['PUESTO'] == puesto) & (t33['Nivel'] == nivel)]['Rango Retributivo'].iloc[0]).replace(',', '.'))
+                        bsger = float(str(t33[(t33['PUESTO'] == puesto) & (t33['Nivel'] == nivel_g)]['Rango Retributivo'].iloc[0]).replace(',', '.'))
+                        propret = 0.5 * (bsresp + bsger)
+                
+                        # Añadir el resultado para esta persona
                         df_resultados.append({
-                            'Supervisor': usuario_autenticado,
+                            'Supervisor': row['SUPERVISOR'],
                             'NOMBRE': row['NOMBRE'],
                             'PUESTO': row['PUESTO'],
-                            'PROPRET': row['propret'],
+                            'PROPRET': propret,
                             "FECHA": datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                         })
-    
-                        # Crear DataFrame con los resultados de las retribuciones
-                        df_resultados = pd.DataFrame(df_resultados) 
+                
+                    # Crear DataFrame con los resultados de las retribuciones
+                    df_resultados = pd.DataFrame(df_resultados)
                     insertar_valoraciones_en_sql(df_valoraciones_actualizadas)
                     insertar_resultados_en_sql(df_resultados)
                     
