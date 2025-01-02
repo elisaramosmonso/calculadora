@@ -102,7 +102,6 @@ if st.session_state.authenticated:
                         "FECHA": datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                     })
 
-                # Aquí entra el código que calculó 'propret' con la lógica que mencionaste
                 if st.button("Guardar valoraciones"):
                     # Guardamos las valoraciones nuevas
                     df_nuevas_valoraciones = pd.DataFrame(valoraciones)
@@ -154,7 +153,7 @@ if st.session_state.authenticated:
 
                     # Crear DataFrame con los resultados de las retribuciones
                     df_resultados = pd.DataFrame(df_resultados)                    
-                    st.table(df_resultados)
+                    
             else:
                 st.warning(f"No hay preguntas para el área **{area_persona}** y puesto **{puesto_persona}**.")
         else:
@@ -165,6 +164,7 @@ if st.session_state.authenticated:
         if 'df_valoraciones_actualizadas' in locals() and not df_valoraciones_actualizadas.empty:
             st.subheader("Valoraciones Actualizadas")
             st.table(df_valoraciones_actualizadas)
+            st.table(df_resultados)
         else:
             st.warning("No hay valoraciones actualizadas para mostrar.")
         
