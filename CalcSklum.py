@@ -276,9 +276,6 @@ if st.session_state.authenticated:
                     
                         # Crear DataFrame con los resultados de las retribuciones
                     df_resultados = pd.DataFrame(df_resultados)
-                    df_valoraciones_actualizadas = df_valoraciones_actualizadas.sort_values('FECHA').drop_duplicates(subset=['NOMBRE'], keep='last')
-                    df_resultados = df_resultados.sort_values('FECHA').drop_duplicates(subset=['NOMBRE'], keep='last')
-
                     insertar_valoraciones_en_sql(df_valoraciones_actualizadas)
                     insertar_resultados_en_sql(df_resultados)
                     
