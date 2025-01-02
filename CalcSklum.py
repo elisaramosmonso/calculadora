@@ -58,15 +58,16 @@ def ver_datos():
     conn= sqlite3.connect('retribuciones.db')
     query = "SELECT * FROM valoraciones"
     dfvaloraciones = pd.read_sql(query, conn)
-    return dfvaloraciones
     conn.close()
+    return dfvaloraciones
 
 def ver_datos2():
     conn= sqlite3.connect('retribuciones.db')
     query = "SELECT * FROM retribuciones"
     dfretribuciones = pd.read_sql(query, conn)
-    return dfretribuciones
     conn.close()
+    return dfretribuciones
+
 def conectar_db():
     conn = sqlite3.connect('retribuciones.db')
     return conn
@@ -281,7 +282,21 @@ if st.session_state.authenticated:
 
                     insertar_valoraciones_en_sql(df_valoraciones_actualizadas)
                     insertar_resultados_en_sql(df_resultados)
+                    df_valoraciones_actualizadas=ver_datos()
+                    df_resultados=ver_datos2()
+                    st.write("### Valoraciones completas (solo para administrador):")
+                    if 'df_valoraciones_actualizadas' in locals() and not df_valoraciones_actualizadas.empty:
+                        st.subheader("Valoraciones Actualizadas")
+                        st.table(df_valoraciones_actualizadas)
+                    else:
+                        st.warning("No hay valoraciones actualizadas para mostrar.")
                     
+                    # Mostrar resultados
+                    if 'df_resultados' in locals() and not df_resultados.empty:
+                        st.subheader("Resultados de Retribución")
+                        st.table(df_resultados)
+                    else:
+                        st.warning("No hay resultados de retribución para mostrar.")
             else:
                 st.warning(f"No hay preguntas para el área **{area_persona}** y puesto **{puesto_persona}**.")
         else:
