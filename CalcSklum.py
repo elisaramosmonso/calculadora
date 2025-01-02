@@ -255,7 +255,7 @@ if st.session_state.authenticated:
                     df_filtrado = df_valoraciones_actualizadas.loc[df_valoraciones_actualizadas.groupby(['SUPERVISOR', 'NOMBRE', 'ÁREA', 'PUESTO'])['COINCIDENCIA_ORDEN'].idxmin()]
 
                 for _, row in df_filtrado.iterrows():
-                        nivel = row['COINCIDENCIA'].values[0]
+                        nivel = row['COINCIDENCIA']
                         nivel_g = nivel
                         puesto = row['PUESTO']  # Asumimos que el puesto está en la fila
                 
