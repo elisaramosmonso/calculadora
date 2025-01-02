@@ -262,7 +262,6 @@ if st.session_state.authenticated:
             cursor.execute('UPDATE trabajadores SET puesto = ? WHERE nombre = ?', (nuevo_puesto, nombre))
             conn.commit()
             conn.close()
-        df_trabajadores = obtener_trabajadores()
         # Sección para cambiar el puesto de un trabajador por nombre
         st.subheader('Cambiar Puesto de un Trabajador')
         nombre_a_cambiar = st.text_input('Nombre del Trabajador a Modificar')
