@@ -226,7 +226,8 @@ if st.session_state.authenticated:
                     df_valoraciones_actualizadas = pd.concat([df_valoraciones_existentes, df_nuevas_valoraciones], ignore_index=True)
                     df_valoraciones_actualizadas.to_csv(archivo_valoraciones, index=False)
                     st.success("Valoraciones guardadas correctamente.")
-                    
+                    st.table(df_valoraciones_actualizadas)
+
 
                     # Calcular 'propret' para cada persona
                     df_resultados = []
@@ -276,6 +277,8 @@ if st.session_state.authenticated:
                     
                         # Crear DataFrame con los resultados de las retribuciones
                     df_resultados = pd.DataFrame(df_resultados)
+                    st.table(df_resultados)
+
                     insertar_valoraciones_en_sql(df_valoraciones_actualizadas)
                     insertar_resultados_en_sql(df_resultados)
                     
