@@ -37,9 +37,96 @@ t2 = pd.read_excel(uploaded_file, sheet_name='TABLA 2')
 
 
 # In[33]:
+def conectar_db():
+    conn = sqlite3.connect('retribuciones.db')
+    return conn
+def crear_tablas(): 
+    conn = conectar_db() 
+    cursor = conn.cursor()
 
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS valoraciones (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            SUPERVISOR TEXT NOT NULL,
+            NOMBRE TEXT NOT NULL,
+            ÁREA TEXT NOT NULL,
+            PUESTO TEXT NOT NULL,
+            id_Conocimiento INTEGER NOT NULL,
+            PREGUNTA TEXT NOT NULL,
+            VALORACIÓN INTEGER NOT NULL,
+            fecha_evaluacion TEXT NOT NULL
+        )
+
+    ''')
+        
+        
+    cursor.execute('''
+        CCREATE TABLE IF NOT EXISTS retribuciones (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    Supervisor TEXT NOT NULL,
+    NOMBRE TEXT NOT NULL,
+    PUESTO TEXT NOT NULL,
+    PROPRET REAL NOT NULL,
+    fecha_evaluacion TEXT NOT NULL
+)
+    ''')
+    
+    conn.commit()
+    conn.close()
+crear_tablas()
 # Definir diccionario de usuarios y contraseñas
 diccUsu_Contra = {"A": "fsa8K", "B": "dfg43P", "C": "htr26J", "admin": "lis23PK"}
+def insertar_valoraciones_en_sql(df_valoraciones_actualizadas):
+    conn = sqlite3.connect('valoraciones.db')
+    cursor = conn.cursor()
+
+    for _, row in df_valoraciones_actualizadas.iterrows():
+        cursor.execute('''
+            INSERT INTO valoraciones (
+                SUPERVISOR,
+                NOMBRE,
+                ÁREA,
+                PUESTO,
+                id_Conocimiento,
+                PREGUNTA,
+                VALORACIÓN,
+                fecha_evaluacion
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        ''', (
+            row['SUPERVISOR'],  
+            row['NOMBRE'],
+            row['ÁREA'],
+            row['PUESTO'],
+            row['id_Conocimiento'],
+            row['PREGUNTA'],
+            row['VALORACIÓN'],
+            row['FECHA']
+        ))
+    conn.commit()
+    conn.close()
+def insertar_resultados_en_sql(df_resultados):
+    conn = sqlite3.connect('resultados.db')
+    cursor = conn.cursor()
+
+    for _, row in df_resultados.iterrows():
+        cursor.execute('''
+            INSERT INTO retribuciones (
+                Supervisor,
+                NOMBRE,
+                PUESTO,
+                PROPRET,
+                fecha_evaluacion
+            ) VALUES (?, ?, ?, ?, ?)
+        ''', (
+            row['Supervisor'],  
+            row['NOMBRE'],
+            row['PUESTO'],
+            row['PROPRET'],
+            row['FECHA'],
+        ))
+
+    conn.commit()
+    conn.close()
 
 # Inicializar estado de autenticación
 if 'authenticated' not in st.session_state:
@@ -108,6 +195,7 @@ if st.session_state.authenticated:
                     df_valoraciones_actualizadas = pd.concat([df_valoraciones_existentes, df_nuevas_valoraciones], ignore_index=True)
                     df_valoraciones_actualizadas.to_csv(archivo_valoraciones, index=False)
                     st.success("Valoraciones guardadas correctamente.")
+                    
 
                     # Calcular 'propret' para cada persona
                     df_resultados = []
@@ -152,7 +240,9 @@ if st.session_state.authenticated:
                     })
 
                     # Crear DataFrame con los resultados de las retribuciones
-                    df_resultados = pd.DataFrame(df_resultados)                    
+                    df_resultados = pd.DataFrame(df_resultados) 
+                    insertar_valoraciones_en_sql(df_valoraciones_actualizadas)
+                    insertar_resultados_en_sql(df_resultados)
                     
             else:
                 st.warning(f"No hay preguntas para el área **{area_persona}** y puesto **{puesto_persona}**.")
@@ -160,6 +250,31 @@ if st.session_state.authenticated:
             st.warning("No se encontraron nombres para este supervisor.")
 
     elif usuario_autenticado == "admin":
+        def obtener_trabajadores():
+            conn = conectar_db()
+            query = "SELECT * FROM trabajadores"
+            df = pd.read_sql(query, conn)
+            conn.close()
+            return df
+        def cambiar_puesto(nombre, nuevo_puesto):
+            conn = conectar_db()
+            cursor = conn.cursor()
+            cursor.execute('UPDATE trabajadores SET puesto = ? WHERE nombre = ?', (nuevo_puesto, nombre))
+            conn.commit()
+            conn.close()
+        df_trabajadores = obtener_trabajadores()
+        # Sección para cambiar el puesto de un trabajador por nombre
+        st.subheader('Cambiar Puesto de un Trabajador')
+        nombre_a_cambiar = st.text_input('Nombre del Trabajador a Modificar')
+        nuevo_puesto = st.text_input('Nuevo Puesto')
+        
+        if st.button('Cambiar Puesto'):
+            if nombre_a_cambiar and nuevo_puesto:
+                cambiar_puesto(nombre_a_cambiar, nuevo_puesto)
+                st.success(f'Puesto del trabajador con nombre "{nombre_a_cambiar}" actualizado a "{nuevo_puesto}"')
+                st.rerun()
+        else:
+            st.error('Por favor, ingrese un nombre válido y un nuevo puesto')
         st.write("### Valoraciones completas (solo para administrador):")
         if 'df_valoraciones_actualizadas' in locals() and not df_valoraciones_actualizadas.empty:
             st.subheader("Valoraciones Actualizadas")
