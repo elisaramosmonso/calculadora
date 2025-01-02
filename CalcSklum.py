@@ -288,21 +288,7 @@ if st.session_state.authenticated:
                     insertar_resultados_en_sql(df_resultados)
                     df_valoraciones_actualizadas = df_valoraciones_actualizadas.sort_values('FECHA').drop_duplicates(subset=['NOMBRE', 'id_Conocimiento'], keep='last')
                     df_resultados = df_resultados.sort_values('FECHA').drop_duplicates(subset=['NOMBRE'], keep='last')
-                    df_valoraciones_actualizadas=ver_datos()
-                    df_resultados=ver_datos2()
-                    st.write("### Valoraciones completas (solo para administrador):")
-                    if 'df_valoraciones_actualizadas' in locals() and not df_valoraciones_actualizadas.empty:
-                        st.subheader("Valoraciones Actualizadas")
-                        st.table(df_valoraciones_actualizadas)
-                    else:
-                        st.warning("No hay valoraciones actualizadas para mostrar.")
                     
-                    # Mostrar resultados
-                    if 'df_resultados' in locals() and not df_resultados.empty:
-                        st.subheader("Resultados de Retribución")
-                        st.table(df_resultados)
-                    else:
-                        st.warning("No hay resultados de retribución para mostrar.")
             else:
                 st.warning(f"No hay preguntas para el área **{area_persona}** y puesto **{puesto_persona}**.")
         else:
