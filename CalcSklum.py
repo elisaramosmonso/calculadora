@@ -37,6 +37,23 @@ t2 = pd.read_excel(uploaded_file, sheet_name='TABLA 2')
 
 
 # In[33]:
+import sqlite3
+
+def vaciar_bd_retribuciones():
+    conn = sqlite3.connect('retribuciones.db')
+    cursor = conn.cursor()
+
+    # Eliminar todos los registros de la tabla retribuciones
+    cursor.execute('DELETE FROM retribuciones')
+    cursor.execute('DELETE FROM valoraciones')
+
+    # Confirmar cambios y cerrar la conexión
+    conn.commit()
+    conn.close()
+
+# Llamar a la función para vaciar la base de datos
+vaciar_bd_retribuciones()
+
 def ver_datos():
     conn= sqlite3.connect('retribuciones.db')
     query = "SELECT * FROM valoraciones"
