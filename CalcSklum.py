@@ -270,7 +270,6 @@ if st.session_state.authenticated:
         if 'df_valoraciones_actualizadas' in locals() and not df_valoraciones_actualizadas.empty:
             st.subheader("Valoraciones Actualizadas")
             st.table(df_valoraciones_actualizadas)
-            st.table(df_resultados)
         else:
             st.warning("No hay valoraciones actualizadas para mostrar.")
         
