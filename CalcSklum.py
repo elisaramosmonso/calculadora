@@ -264,13 +264,12 @@ if st.session_state.authenticated:
             st.warning("No se encontraron nombres para este supervisor.")
 
     elif usuario_autenticado == "admin":
-        
+        df_valoraciones_actualizadas=ver_datos()
+        df_resultados=ver_datos2()
         st.write("### Valoraciones completas (solo para administrador):")
         if 'df_valoraciones_actualizadas' in locals() and not df_valoraciones_actualizadas.empty:
             st.subheader("Valoraciones Actualizadas")
-            df_valoraciones_actualizadas=ver_datos()
             st.table(df_valoraciones_actualizadas)
-            df_resultados=ver_datos2()
             st.table(df_resultados)
         else:
             st.warning("No hay valoraciones actualizadas para mostrar.")
