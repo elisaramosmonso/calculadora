@@ -254,7 +254,7 @@ if st.session_state.authenticated:
                     df_valoraciones_actualizadas['COINCIDENCIA_ORDEN'] = df_valoraciones_actualizadas['COINCIDENCIA'].map(orden_dict)
 
                     # Filtrar por el menor nivel de coincidencia para cada persona
-                    df_filtrado = df_valoraciones_actualizadas.loc[df_valoraciones_actualizadas.groupby(['SUPERVISOR', 'NOMBRE', 'ÁREA', 'PUESTO'])['COINCIDENCIA_ORDEN'].idxmin()]
+                    df_filtrado = df_valoraciones_actualizadas.loc[df_valoraciones_actualizadas.groupby(['SUPERVISOR', 'NOMBRE', 'ÁREA', 'PUESTO', 'FECHA'])['COINCIDENCIA_ORDEN'].idxmin()]
 
                     for _, row in df_filtrado.iterrows():
                             nivel = row['COINCIDENCIA']
@@ -272,7 +272,7 @@ if st.session_state.authenticated:
                                 'NOMBRE': row['NOMBRE'],
                                 'PUESTO': row['PUESTO'],
                                 'PROPRET': propret,
-                                "FECHA": datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                                "FECHA": row['FECHA']
                             })
                     
                         # Crear DataFrame con los resultados de las retribuciones
