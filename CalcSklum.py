@@ -248,8 +248,7 @@ if st.session_state.authenticated:
                     
                     bsresp = float(str(t33[(t33['PUESTO'] == puesto) & (t33['Nivel'] == nivel)]['Rango Retributivo'].iloc[0]).replace(',', '.'))
                     propret = bsresp
-                    df_resultados.append({
-                        'Supervisor': row['SUPERVISOR'],
+                    df_resultados.append({'Supervisor': row['SUPERVISOR'],
                         'NOMBRE': row['NOMBRE'],
                         'PUESTO': row['PUESTO'],
                         'PROPRET': propret,
