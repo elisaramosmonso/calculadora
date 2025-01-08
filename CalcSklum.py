@@ -246,20 +246,7 @@ if st.session_state.authenticated:
                     nivel = tprueb2.loc[tprueb2['diferencia'].idxmin()]
                     print(nivel)
                     
-                    puesto = row['PUESTO']  
-                    bsresp = float(str(t33[(t33['PUESTO'] == puesto) & (t33['Nivel'] == nivel)]['Rango Retributivo'].iloc[0]).replace(',', '.'))
-                    propret = bsresp
                     
-                    df_resultados.append({
-                        'Supervisor': row['SUPERVISOR'],
-                        'NOMBRE': row['NOMBRE'],
-                        'PUESTO': row['PUESTO'],
-                        'PROPRET': propret,
-                        "FECHA": row['FECHA']
-                    })
-                    
-                    df_resultados = pd.DataFrame(df_resultados)
-                    df_resultados = df_resultados.sort_values('FECHA').drop_duplicates(subset=['NOMBRE'], keep='last')
                 if 'df_valoraciones_actualizadas' in locals() and not df_valoraciones_actualizadas.empty:
     
                     insertar_valoraciones_en_sql(df_valoraciones_actualizadas)
