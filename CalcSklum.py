@@ -254,12 +254,12 @@ if st.session_state.authenticated:
 
                     
                     
-                if 'df_valoraciones_actualizadas' in locals() and not df_valoraciones_actualizadas.empty:
-    
-                    insertar_valoraciones_en_sql(df_valoraciones_actualizadas)
-                    insertar_resultados_en_sql(df_resultados)
-                    df_valoraciones_actualizadas = df_valoraciones_actualizadas.sort_values('FECHA').drop_duplicates(subset=['NOMBRE', 'id_Conocimiento'], keep='last')
-                    df_resultados = df_resultados.sort_values('FECHA').drop_duplicates(subset=['NOMBRE'], keep='last')
+                    if 'df_valoraciones_actualizadas' in locals() and not df_valoraciones_actualizadas.empty:
+        
+                        insertar_valoraciones_en_sql(df_valoraciones_actualizadas)
+                        insertar_resultados_en_sql(df_resultados)
+                        df_valoraciones_actualizadas = df_valoraciones_actualizadas.sort_values('FECHA').drop_duplicates(subset=['NOMBRE', 'id_Conocimiento'], keep='last')
+                        df_resultados = df_resultados.sort_values('FECHA').drop_duplicates(subset=['NOMBRE'], keep='last')
                     
             else:
                 st.warning(f"No hay preguntas para el área **{area_persona}** y puesto **{puesto_persona}**.")
