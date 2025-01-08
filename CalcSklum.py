@@ -245,8 +245,8 @@ if st.session_state.authenticated:
                     tprueb2['diferencia'] = abs(tprueb2['suma_valoraciones'] - valoracion)   
                     nivel = tprueb2.loc[tprueb2['diferencia'].idxmin()]
                     st.write(nivel)                    
-                     
-                    bsresp = float(str(t33[(t33['PUESTO'] == puesto) & (t33['Nivel'] == nivel)]['Rango Retributivo'].iloc[0]).replace(',', '.'))
+                    
+                    bsresp = float(str(t33[(t33['PUESTO'] == puesto) & (t33['Nivel'] == nivel)]['Rango Retributivo'].iloc[0]).replace(',', '.'))
                     propret = bsresp
                     
                     df_resultados.append({
