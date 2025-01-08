@@ -241,7 +241,7 @@ if st.session_state.authenticated:
                     valoracion=0
                     for _, row in df_filtrado.iterrows():
                         valoracion += (row['VALORACIÓN'])
-                    puesto = df_filtrado.iloc[0]['PUESTO'] 
+                    puesto = df_filtrado.iloc[0]['PUESTO'].replace('\u00A0', '')
                     tprueb2['diferencia'] = abs(tprueb2['suma_valoraciones'] - valoracion)   
                     nivel = tprueb2.loc[tprueb2['diferencia'].idxmin()]
                     st.write(nivel)                    
