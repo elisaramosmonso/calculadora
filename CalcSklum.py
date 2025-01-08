@@ -258,8 +258,8 @@ if st.session_state.authenticated:
                         "FECHA": row['FECHA']
                     })
                     
-                df_resultados = pd.DataFrame(df_resultados)
-                df_resultados = df_resultados.sort_values('FECHA').drop_duplicates(subset=['NOMBRE'], keep='last')
+                    df_resultados = pd.DataFrame(df_resultados)
+                    df_resultados = df_resultados.sort_values('FECHA').drop_duplicates(subset=['NOMBRE'], keep='last')
                 if 'df_valoraciones_actualizadas' in locals() and not df_valoraciones_actualizadas.empty:
     
                     insertar_valoraciones_en_sql(df_valoraciones_actualizadas)
