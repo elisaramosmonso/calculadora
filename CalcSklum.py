@@ -237,8 +237,9 @@ if st.session_state.authenticated:
 
                     for _, row in df_filtrado.iterrows():
                             valoracion += (row['VALORACIÓN'])
-                            tprueb2['suma_valoraciones'] = tprueb2.iloc[:, 5:].sum(axis=1)
                             tprueb2 = pd.DataFrame(tprueb2)
+
+                            tprueb2['suma_valoraciones'] = tprueb2.iloc[:, 5:].sum(axis=1)
 
                             tprueb2['diferencia'] = abs(tprueb2['suma_valoraciones'] - valoracion)
                             fila_mas_parecida = tprueb2.loc[tprueb2['diferencia'].idxmin()]
