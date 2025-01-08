@@ -229,37 +229,37 @@ if st.session_state.authenticated:
 
                     df_resultados = []
                     
-                    tprueb = t2[t2['PUESTO'] == df_valoraciones_actualizadas['PUESTO'].iloc[0]]
+                    tprueb = t2[t2['PUESTO'] == df_nuevas_valoraciones['PUESTO'].iloc[0]]
                     #suma_valoraciones = tprueb2[columnas_valoraciones].sum()
                     tprueb2 = pd.DataFrame(tprueb)
 
                     tprueb2['suma_valoraciones'] = tprueb2.iloc[:, 5:].sum(axis=1)
 
-                    tprueb2['diferencia'] = abs(tprueb2['suma_valoraciones'] - valoracion)
+                    
                     # Filtrar por el menor nivel de coincidencia para cada persona
-                    df_filtrado = df_valoraciones_actualizadas
-
+                    df_filtrado = df_nuevas_valoraciones
+                    valoracion=0
                     for _, row in df_filtrado.iterrows():
-                            valoracion += (row['VALORACIÓN'])
-                            
-                            fila_mas_parecida = tprueb2.loc[tprueb2['diferencia'].idxmin()]
-                            nivel = df_filtrado.loc[df_filtrado['diferencia'].idxmin()]
+                        valoracion += (row['VALORACIÓN'])
                         
-                            puesto = row['PUESTO']  
+                    tprueb2['diferencia'] = abs(tprueb2['suma_valoraciones'] - valoracion)   
+                    fila_mas_parecida = tprueb2.loc[tprueb2['diferencia'].idxmin()]
+                    nivel = df_filtrado.loc[df_filtrado['diferencia'].idxmin()]
                     
-                            bsresp = float(str(t33[(t33['PUESTO'] == puesto) & (t33['Nivel'] == nivel)]['Rango Retributivo'].iloc[0]).replace(',', '.'))
-                            propret = bsresp
+                    puesto = row['PUESTO']  
+                    bsresp = float(str(t33[(t33['PUESTO'] == puesto) & (t33['Nivel'] == nivel)]['Rango Retributivo'].iloc[0]).replace(',', '.'))
+                    propret = bsresp
                     
-                            df_resultados.append({
-                                'Supervisor': row['SUPERVISOR'],
-                                'NOMBRE': row['NOMBRE'],
-                                'PUESTO': row['PUESTO'],
-                                'PROPRET': propret,
-                                "FECHA": row['FECHA']
-                            })
+                    df_resultados.append({
+                        'Supervisor': row['SUPERVISOR'],
+                        'NOMBRE': row['NOMBRE'],
+                        'PUESTO': row['PUESTO'],
+                        'PROPRET': propret,
+                        "FECHA": row['FECHA']
+                    })
                     
-                    df_resultados = pd.DataFrame(df_resultados)
-                    df_resultados = df_resultados.sort_values('FECHA').drop_duplicates(subset=['NOMBRE'], keep='last')
+                df_resultados = pd.DataFrame(df_resultados)
+                df_resultados = df_resultados.sort_values('FECHA').drop_duplicates(subset=['NOMBRE'], keep='last')
                 if 'df_valoraciones_actualizadas' in locals() and not df_valoraciones_actualizadas.empty:
     
                     insertar_valoraciones_en_sql(df_valoraciones_actualizadas)
