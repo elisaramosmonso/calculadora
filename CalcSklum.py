@@ -233,7 +233,7 @@ if st.session_state.authenticated:
                     #suma_valoraciones = tprueb2[columnas_valoraciones].sum()
 
                     # Filtrar por el menor nivel de coincidencia para cada persona
-                    df_filtrado = df_valoraciones_actualizadas.loc[df_valoraciones_actualizadas.groupby(['SUPERVISOR', 'NOMBRE', 'ÁREA', 'PUESTO', 'FECHA'])['COINCIDENCIA_ORDEN'].idxmin()]
+                    df_filtrado = df_valoraciones_actualizadas
 
                     for _, row in df_filtrado.iterrows():
                             valoracion= sum(row['puntuacion'])
