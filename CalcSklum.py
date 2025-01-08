@@ -243,8 +243,8 @@ if st.session_state.authenticated:
                         valoracion += (row['VALORACIÓN'])
                         
                     tprueb2['diferencia'] = abs(tprueb2['suma_valoraciones'] - valoracion)   
-                    fila_mas_parecida = tprueb2.loc[tprueb2['diferencia'].idxmin()]
-                    nivel = df_filtrado.loc[df_filtrado['diferencia'].idxmin()]
+                    nivel = tprueb2.loc[tprueb2['diferencia'].idxmin()]
+                    
                     
                     puesto = row['PUESTO']  
                     bsresp = float(str(t33[(t33['PUESTO'] == puesto) & (t33['Nivel'] == nivel)]['Rango Retributivo'].iloc[0]).replace(',', '.'))
