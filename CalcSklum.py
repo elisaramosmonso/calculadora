@@ -236,7 +236,7 @@ if st.session_state.authenticated:
                     df_filtrado = df_valoraciones_actualizadas
 
                     for _, row in df_filtrado.iterrows():
-                            valoracion= sum(row['puntuacion'])
+                            valoracion= sum(row['VALORACIÓN'])
                             tprueb2['suma_valoraciones'] = tprueb2.iloc[:, 5:].sum(axis=1)
                             tprueb2 = pd.DataFrame(tprueb2)
 
