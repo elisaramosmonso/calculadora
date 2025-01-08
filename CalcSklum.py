@@ -241,11 +241,11 @@ if st.session_state.authenticated:
                     valoracion=0
                     for _, row in df_filtrado.iterrows():
                         valoracion += (row['VALORACIÓN'])
-                        
+                        puesto = row['PUESTO'] 
                     tprueb2['diferencia'] = abs(tprueb2['suma_valoraciones'] - valoracion)   
                     nivel = tprueb2.loc[tprueb2['diferencia'].idxmin()]
                     st.write(nivel)                    
-                    puesto = row['PUESTO']  
+                     
                     bsresp = float(str(t33[(t33['PUESTO'] == puesto) & (t33['Nivel'] == nivel)]['Rango Retributivo'].iloc[0]).replace(',', '.'))
                     propret = bsresp
                     
