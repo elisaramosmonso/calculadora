@@ -231,17 +231,17 @@ if st.session_state.authenticated:
                     
                     tprueb = t2[t2['PUESTO'] == df_valoraciones_actualizadas['PUESTO'].iloc[0]]
                     #suma_valoraciones = tprueb2[columnas_valoraciones].sum()
+                    tprueb2 = pd.DataFrame(tprueb)
 
+                    tprueb2['suma_valoraciones'] = tprueb2.iloc[:, 5:].sum(axis=1)
+
+                    tprueb2['diferencia'] = abs(tprueb2['suma_valoraciones'] - valoracion)
                     # Filtrar por el menor nivel de coincidencia para cada persona
                     df_filtrado = df_valoraciones_actualizadas
 
                     for _, row in df_filtrado.iterrows():
                             valoracion += (row['VALORACIÓN'])
-                            tprueb2 = pd.DataFrame(tprueb2)
-
-                            tprueb2['suma_valoraciones'] = tprueb2.iloc[:, 5:].sum(axis=1)
-
-                            tprueb2['diferencia'] = abs(tprueb2['suma_valoraciones'] - valoracion)
+                            
                             fila_mas_parecida = tprueb2.loc[tprueb2['diferencia'].idxmin()]
                             nivel = df_filtrado.loc[df_filtrado['diferencia'].idxmin()]
                         
