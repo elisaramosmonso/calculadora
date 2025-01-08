@@ -222,50 +222,33 @@ if st.session_state.authenticated:
                 
                 if st.button("Guardar valoraciones"):
                     
-                    # Guardamos las valoraciones nuevas
                     df_nuevas_valoraciones = pd.DataFrame(valoraciones)
                     df_valoraciones_actualizadas = pd.concat([df_valoraciones_existentes, df_nuevas_valoraciones], ignore_index=True)
                     st.success("Valoraciones guardadas correctamente.")
                     df_valoraciones_actualizadas = df_valoraciones_actualizadas.sort_values('FECHA').drop_duplicates(subset=['NOMBRE', 'id_Conocimiento'], keep='last')
 
-                    # Calcular 'propret' para cada persona
                     df_resultados = []
                     
                     tprueb = t2[t2['PUESTO'] == df_valoraciones_actualizadas['PUESTO'].iloc[0]]
-                    tprueb2 = tprueb.iloc[:, 5:]
-                    tprueb2 = pd.DataFrame(tprueb2)
-
-                    # Definir el orden de los niveles
-                    orden = ['N0: Prácticas', 'N1: 6M A 1,5 AÑO', 'N2: 1,5 - 3 AÑO', 'N3: 3 - 5 AÑO',
-                             'N1: 5 - 6,5 AÑOS', 'N2: 6,5 - 8 AÑOS', 'N3: 8 - 10 AÑOS',
-                             'N1: 10 - 13 AÑOS', 'N2: 13 - 16 AÑOS', 'N3: 16 - 20 AÑOS',
-                             'N1: 20 - 24 AÑOS', 'N2: 24 - 30 AÑOS', 'N3: 30 - 38 AÑOS']
-
-                    def find_matching_column(valoracion, df2):
-                        for col in tprueb2.columns:
-                            if valoracion in tprueb2[col].values:
-                                return col
-                        return None
-                    
-                    # nivel
-                    df_valoraciones_actualizadas['COINCIDENCIA'] = df_valoraciones_actualizadas['VALORACIÓN'].apply(lambda x: find_matching_column(x, tprueb2))
-                    orden_dict = {value: idx for idx, value in enumerate(orden)}
-                    df_valoraciones_actualizadas['COINCIDENCIA_ORDEN'] = df_valoraciones_actualizadas['COINCIDENCIA'].map(orden_dict)
+                    #suma_valoraciones = tprueb2[columnas_valoraciones].sum()
 
                     # Filtrar por el menor nivel de coincidencia para cada persona
                     df_filtrado = df_valoraciones_actualizadas.loc[df_valoraciones_actualizadas.groupby(['SUPERVISOR', 'NOMBRE', 'ÁREA', 'PUESTO', 'FECHA'])['COINCIDENCIA_ORDEN'].idxmin()]
 
                     for _, row in df_filtrado.iterrows():
-                            nivel = row['COINCIDENCIA']
-                            nivel_g = nivel
-                            puesto = row['PUESTO']  # Asumimos que el puesto está en la fila
+                            valoracion= sum(row['puntuacion'])
+                            tprueb2['suma_valoraciones'] = tprueb2.iloc[:, 5:].sum(axis=1)
+                            tprueb2 = pd.DataFrame(tprueb2)
+
+                            tprueb2['diferencia'] = abs(tprueb2['suma_valoraciones'] - valoracion)
+                            fila_mas_parecida = tprueb2.loc[tprueb2['diferencia'].idxmin()]
+                            nivel = df_filtrado.loc[df_filtrado['diferencia'].idxmin()]
+                        
+                            puesto = row['PUESTO']  
                     
-                            # t33 para los rangos retributivos
                             bsresp = float(str(t33[(t33['PUESTO'] == puesto) & (t33['Nivel'] == nivel)]['Rango Retributivo'].iloc[0]).replace(',', '.'))
-                            bsger = float(str(t33[(t33['PUESTO'] == puesto) & (t33['Nivel'] == nivel_g)]['Rango Retributivo'].iloc[0]).replace(',', '.'))
-                            propret = 0.5 * (bsresp + bsger)
+                            propret = bsresp
                     
-                            # Añadir el resultado para esta persona
                             df_resultados.append({
                                 'Supervisor': row['SUPERVISOR'],
                                 'NOMBRE': row['NOMBRE'],
@@ -274,7 +257,6 @@ if st.session_state.authenticated:
                                 "FECHA": row['FECHA']
                             })
                     
-                        # Crear DataFrame con los resultados de las retribuciones
                     df_resultados = pd.DataFrame(df_resultados)
                     df_resultados = df_resultados.sort_values('FECHA').drop_duplicates(subset=['NOMBRE'], keep='last')
                 if 'df_valoraciones_actualizadas' in locals() and not df_valoraciones_actualizadas.empty:
