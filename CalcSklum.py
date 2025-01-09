@@ -233,7 +233,7 @@ if st.session_state.authenticated:
                     tprueb2 = pd.DataFrame(tprueb)
                 
                     tprueb2['suma_valoraciones'] = tprueb2.iloc[:, 5:].sum(axis=1)
-                
+                    st.write(tprueb2['suma_valoraciones'])
                     # Filtrar por el menor nivel de coincidencia para cada persona
                     df_filtrado = df_nuevas_valoraciones
                     valoracion = 0
