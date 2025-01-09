@@ -254,6 +254,7 @@ if st.session_state.authenticated:
                                           'PUESTO': puesto,
                                           'PROPRET': propret,
                                           "FECHA": fecha})
+                    df_resultados=pd.DataFrame(df_resultados)
                     if 'df_valoraciones_actualizadas' in locals() and not df_valoraciones_actualizadas.empty:
         
                         insertar_valoraciones_en_sql(df_valoraciones_actualizadas)
