@@ -244,7 +244,9 @@ if st.session_state.authenticated:
                     columna_mas_cercana = diferencias.idxmin()
                     valor_mas_cercano = suma_columnas[columna_mas_cercana]
                     st.write(valor_mas_cercano)
-                    nivel = tprueb2.loc[tprueb2['diferencia'].idxmin()]
+                    st.write(columna_mas_cercana)
+
+                    nivel = columna_mas_cercana
                     st.write(nivel)
                 
                     bsresp = float(str(t33[(t33['PUESTO'] == puesto) & (t33['Nivel'] == nivel)]['Rango Retributivo'].iloc[0]).replace(',', '.'))
