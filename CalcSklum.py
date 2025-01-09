@@ -233,7 +233,6 @@ if st.session_state.authenticated:
                     tprueb2 = pd.DataFrame(tprueb)
                 
                     suma_columnas = tprueb2.iloc[:, 5:].sum(axis=0)
-                    st.write(suma_columnas)
                     # Filtrar por el menor nivel de coincidencia para cada persona
                     df_filtrado = df_nuevas_valoraciones
                     valoracion = 0
@@ -241,6 +240,7 @@ if st.session_state.authenticated:
                         valoracion += row['VALORACIÓN']
                     nombre = df_filtrado.iloc[0]['NOMBRE']
                     fecha = df_filtrado.iloc[0]['FECHA']
+                    supervisor = df_filtrado.iloc[0]['SUPERVISOR']
 
                     puesto = df_filtrado.iloc[0]['PUESTO'].replace('\u00A0', '')
                     diferencias = abs(suma_columnas - valoracion)
@@ -249,7 +249,7 @@ if st.session_state.authenticated:
                     nivel = columna_mas_cercana
                     bsresp = float(str(t33[(t33['PUESTO'] == puesto) & (t33['Nivel'] == nivel)]['Rango Retributivo'].iloc[0]).replace(',', '.'))
                     propret = bsresp
-                    df_resultados.append({'Supervisor': row['SUPERVISOR'],
+                    df_resultados.append({'Supervisor': supervisor,
                                           'NOMBRE': nombre,
                                           'PUESTO': puesto,
                                           'PROPRET': propret,
