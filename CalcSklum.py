@@ -239,23 +239,21 @@ if st.session_state.authenticated:
                     valoracion = 0
                     for _, row in df_filtrado.iterrows():
                         valoracion += row['VALORACIÓN']
+                    nombre = df_filtrado.iloc[0]['NOMBRE']
+                    fecha = df_filtrado.iloc[0]['FECHA']
+
                     puesto = df_filtrado.iloc[0]['PUESTO'].replace('\u00A0', '')
                     diferencias = abs(suma_columnas - valoracion)
                     columna_mas_cercana = diferencias.idxmin()
                     valor_mas_cercano = suma_columnas[columna_mas_cercana]
-                    st.write(valor_mas_cercano)
-                    st.write(columna_mas_cercana)
-
                     nivel = columna_mas_cercana
-                    st.write(nivel)
-                
                     bsresp = float(str(t33[(t33['PUESTO'] == puesto) & (t33['Nivel'] == nivel)]['Rango Retributivo'].iloc[0]).replace(',', '.'))
                     propret = bsresp
                     df_resultados.append({'Supervisor': row['SUPERVISOR'],
-                                          'NOMBRE': row['NOMBRE'],
-                                          'PUESTO': row['PUESTO'],
+                                          'NOMBRE': nombre,
+                                          'PUESTO': puesto,
                                           'PROPRET': propret,
-                                          "FECHA": row['FECHA']})
+                                          "FECHA": fecha})
                     if 'df_valoraciones_actualizadas' in locals() and not df_valoraciones_actualizadas.empty:
         
                         insertar_valoraciones_en_sql(df_valoraciones_actualizadas)
